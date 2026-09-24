@@ -1,62 +1,48 @@
-📦 Dependency Checker
+# 📦 Dependency Checker
 
-A lightweight TypeScript tool to keep your project dependencies up-to-date and secure.
-It scans for outdated packages, runs npm audit, and can even auto-fix vulnerabilities.
-Works with single projects and monorepos (packages/*/), and generates both JSON and Markdown reports.
+A lightweight TypeScript CLI that keeps a project's npm dependencies up to date and secure. It lists
+outdated packages, runs `npm audit`, can apply fixes, and writes JSON and Markdown reports. Works on a
+single project or a monorepo (`packages/*/`).
 
 ## Installation
 
-Install TypeScript + Node.js typings (if not already installed):
 ```bash
 npm install --save-dev ts-node typescript @types/node
 ```
 
 ## Usage
 
-🔍 Check dependencies
-ts-node dependency-checker.ts
-
-🛠️ Auto-fix safe issues
-ts-node dependency-checker.ts --fix
-
-💥 Auto-fix everything (⚠️ may break)
-ts-node dependency-checker.ts --fix --force
+```bash
+ts-node dependency-checker.ts                  # 🔍 check outdated packages and vulnerabilities
+ts-node dependency-checker.ts --fix            # 🛠️ npm audit fix (safe fixes only)
+ts-node dependency-checker.ts --fix --force    # 💥 npm audit fix --force (may install breaking changes)
 ```
 
-📊 Output
+## Output
 
-✅ Console summary for each project
+- ✅ Console summary per project
+- 📄 `dependency-report.json`: machine-readable
+- 📝 `dependency-report.md`: human-readable, ready for a PR comment or Slack
 
-📄 dependency-report.json → machine-readable
+Example Markdown entry:
 
-📝 dependency-report.md → human-readable (great for PRs or Slack)
-
+```markdown
 ### api-service
 - Path: packages/api
 - Outdated: 2
 - Vulnerabilities: Critical=0, High=1, Moderate=3, Low=5
 - AutoFix: ✅ Applied
+```
 
+## Precautions
 
+- Review changes after an auto-fix with `git diff`.
+- `--force` can install breaking major versions; test thoroughly afterwards.
+- Monorepo discovery only looks at `packages/*/`; extend the script for other layouts.
+- This is a helper, not a replacement for Dependabot, Renovate or Snyk.
 
+## Suggested use
 
-⚠️ Precautions
-
-Always review changes after auto-fix:
-
-git diff
-
-
---force will install breaking changes. Use only if you’re ready to test thoroughly.
-
-Monorepo support is limited to packages/*/. Extend script if your layout is different.
-
-This is a helper, not a replacement for tools like Dependabot, Renovate, or Snyk.
-
-✅ Best Practices
-
-Run before every release.
-
-Integrate into CI/CD to block merges if critical/high vulnerabilities exist.
-
-Share the Markdown report with your team for visibility.
+- Run it before every release.
+- Add it to CI and fail the build on critical or high vulnerabilities.
+- Share the Markdown report with the team.
